@@ -51,10 +51,13 @@ The patch has been verified against pristine `vendor.vhdx` from WSA
 - The rebuilt VHDX passes `qemu-img check` and its ext4 filesystem passes a
   read-only `e2fsck` verification.
 
-- Application-level testing confirmed:
+- Application-level testing observations:
   - The CI build candidate package was installed and registered with live user data preserved.
   - WSA booted normally and Google Play Store operated without issues.
-  - TikTok (`com.ss.android.ugc.trill`) successfully launched through its `SplashActivity`, initialized its `MainActivity` and `MainRootFragment`, and remained fully usable.
-  - Exercised over multiple sessions across 6+ minutes with zero crashes.
-  - Diagnostics verified zero new tombstones (0 new vs 9 baseline), zero new ANRs (0 new vs 4 baseline), and zero Scudo allocator or ART SIGSEGV crashes in logcat.
+  - TikTok (`com.ss.android.ugc.trill`) successfully launched through its `SplashActivity`, initialized its `MainActivity` and `MainRootFragment`, and handled multiple launcher activations.
+  - The primary target issue—the native Scudo/ART heap allocator SIGSEGV caused by the API 33/34 Houdini mismatch—did not recur (0 new tombstones vs 9 baseline, 0 new ANRs vs 4 baseline).
+  - During extended runtime, a subsequent application-level crash was observed at 04:22 (`com.bytedance.librarian.LibrarianUnsatisfiedLinkError` for `libbd-install.so` noting `check x86_64`) after dynamic feature module delivery updated split APK paths while the original process was running.
+  - Subsequent cold relaunch with the finalized package state succeeded and initialized native components without the Librarian error.
+  - While the Houdini translator fix is validated at the system and translation runtime level, application-level stability across dynamic module updates and long sessions remains under qualification rather than fully guaranteed.
+
 
