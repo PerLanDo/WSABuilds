@@ -133,7 +133,7 @@ jobs:
           [[ "$GAPPS_INPUT" == "MindTheGapps v13.0" ]] && args+=(--install-gapps)
           [[ "$REMOVE_AMAZON" == "true" ]] && args+=(--remove-amazon)
 
-          chmod -R u+rwX,go+rX ./
+          chmod +x ./scripts/build.sh
           mkdir -p download
           printf 'user_code=%s\n' "$USER_CODE" > download/.ms_account
           ./scripts/build.sh "${args[@]}"
