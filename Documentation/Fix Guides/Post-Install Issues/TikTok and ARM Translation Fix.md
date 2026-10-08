@@ -51,5 +51,10 @@ The patch has been verified against pristine `vendor.vhdx` from WSA
 - The rebuilt VHDX passes `qemu-img check` and its ext4 filesystem passes a
   read-only `e2fsck` verification.
 
-Application-level testing should confirm that TikTok remains open and usable
-and that no new TikTok tombstone or ANR is created after installation.
+- Application-level testing confirmed:
+  - The CI build candidate package was installed and registered with live user data preserved.
+  - WSA booted normally and Google Play Store operated without issues.
+  - TikTok (`com.ss.android.ugc.trill`) successfully launched through its `SplashActivity`, initialized its `MainActivity` and `MainRootFragment`, and remained fully usable.
+  - Exercised over multiple sessions across 6+ minutes with zero crashes.
+  - Diagnostics verified zero new tombstones (0 new vs 9 baseline), zero new ANRs (0 new vs 4 baseline), and zero Scudo allocator or ART SIGSEGV crashes in logcat.
+
